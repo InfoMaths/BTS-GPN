@@ -1,0 +1,143 @@
+library(tidyverse)
+
+##############################Loi Normale##############################################
+## Calcul de probabilité le préfixe p signifie probabilité
+## Soit X une variable aléatoire suivant une loi normale 
+## de moyenne 100 et d'écart-type 5
+## a) Calculer la probabilité que X soit inférieur à 95: P(X<95)
+pnorm(95,100,5)
+## Calculer la probabilité que X soit inférieur à 105: P(X<105)
+pnorm(105,100,5)
+## Calcul d'un quantile préfixe q signifie quantile
+##Calcul de quantile (loi normale inverse)Trouver a tel que P(X<=a)=0.975
+## X suit une loi normale de moyenne 100 et d'écart-type 5
+qnorm(0.975,100,5)
+## X suit une loi normale centrée réduite
+qnorm(0.975,0,1)
+##Représentation de la fonction de densité d'une loi normale
+##préfixe d signifie densité
+x = seq(from = 85, to = 115, by = 0.2)
+plot(x, dnorm(x, mean = 100, sd = 5), type = "l", col = 'red',
+     lwd = 2, main = "Densité de la loi N(100;5)")
+
+## Exercice1:Soit X une variable aléatoire distribuée selon
+##  une loi normale d'espérance μ=12  et d'écart-type  σ=3
+## a) Calculer P(X<10)
+
+## b) Calculer P(X>15)
+
+## c) Calculer P(10<X<15)
+
+## d) Calculer le quantile x d'ordre 0,9
+
+## e) Calculer le quantile x d'ordre 0,1
+
+## f) Représenter la fonction de densité de la loi N(12;3)
+
+
+##################################### Loi Binomiale ########################################
+##Soit X une variable distribuée selon la loi binomiale 
+## de paramètres n=20 et p=0.3
+## 1)  Les probabilités P(X≤10) et P(X≥15) ( pbinom())
+pbinom(10, size = 20, prob = 0.3)
+pbinom(14, size = 20, prob = 0.3, lower.tail = FALSE)
+1-pbinom(14, size = 20, prob = 0.3)
+## 2)  Les probabilités P(X=10) et P(X=15) (dbinom())
+dbinom(10, size = 20, prob = 0.3)
+dbinom(15, size = 20, prob = 0.3)
+
+## 3)  Les quantiles d'ordre 0.9 et 0.1 (qbinom())
+qbinom(0.9, size = 20, prob = 0.3)
+qbinom(0.1, size = 20, prob = 0.3)
+## 4)  Représenter la fonction de masse de probabilité de la loi B(20;0.3)
+x = seq(from = 0, to =20, by = 1)
+barplot(dbinom(x, size = 20, prob = 0.3), col = rainbow(20), names.arg = x, xlab = "k", ylab = "P(X = k)",
+        main = "Représentation de la loi B(8;0,5)",space=2)
+
+## Exercice2:Soit X une variable aléatoire distribuée selon 
+## une loi binomiale de paramètres n=10 et p=0.4
+## 1) Calculer P(X≤5) 
+
+## 2) Calculer P(X≥7) 
+
+## 3) Calculer P(X=5)
+
+## 4) Calculer P(X=7)
+
+## 5) Calculer le quantile x d'ordre 0,9
+
+## 6) Calculer le quantile x d'ordre 0,1
+
+## 7) Représenter la fonction de masse de probabilité de la loi B(10;0.4)
+
+## Exercice 2:
+## 1) Simuler un vecteur simu de 1000 valeurs d'une variable X
+##  de loi binomiale de paramètres n=50 et p=0,3
+n = 50
+p = 0.3
+nbsimul = 1000
+x = seq(from = 0, to = 50, by = 0.1)
+simu = rbinom(n = nbsimul, size = n, prob = p )
+## Tracer l'histogramme de simu
+hist(simu, probability = TRUE, ylim = c(0,0.15), 
+     main = "Histogramme et courbes de fonctions de densité",
+     col=rainbow(10))
+## 2) On note : a = mean(simu) et b = sd(simu). 
+## Représenter en bleu la densité de loi normale 
+## d'espérance a et d'écart-type b.
+
+lines(x, dnorm(x, mean = mean(simu), sd = sd(simu)), col = "blue",lwd=2)
+## 3) Représenter en rouge la densité de la loi normale d'espérance np
+## et d'écart-type racine(np(1−p))
+.
+lines(x, dnorm(x, mean = n*p, sd = sqrt(n*p*(1-p))), col = "red",lwd=2)
+## 3) Calculer la probabilité P(10 ≤ X ≤ 20)
+pbinom(20, size = n, prob = p) - pbinom(10, size = n, prob = p)
+## 4) Calculer la probabilité P(10 ≤ X ≤ 20) en utilisant la loi normale
+pnorm(20, mean = n*p, sd = sqrt(n*p*(1-p))) - pnorm(10, mean = n*p, sd = sqrt(n*p*(1-p)))
+
+## Exercice 3:
+## Soit X une variable aléatoire distribuée selon une loi normale
+## de moyenne  μ=12  et d'écart-type  σ=3
+## 1)Expliquer les commandes suivantes
+x <- seq(0,20, by=0.01)
+y <- dnorm(x,12,3)
+
+t <- seq(9,15,by=0.01)
+z <-dnorm(t,12,3)
+## 2) Représenter la fonction de densité de la loi N(12;3)
+tab <- data.frame(x,y)
+zone <- data.frame(t,z)
+ggplot(tab) +aes(x,y)+
+  geom_line(lwd=2)+
+  geom_area(data=zone,aes(t,z),fill='pink')+
+  theme(panel.grid = element_line(color = "#8ccde3",
+                                  size = 0.1,linetype = 2))
+## Calculer la probabilité P(9 ≤ X ≤ 15)
+pnorm(15,12,3)-pnorm(9,12,3)
+## 3) Calculer la probabilité P(9 ≤ X ≤ 15) en utilisant la loi normale centrée réduite
+pnorm((15-12)/3)-pnorm((9-12)/3)
+## 4) Calculer P(X>15)
+1-pnorm(15,12,3)
+## 5) Calculer P(X<9)
+pnorm(9,12,3)
+## 6) Calculer P(9<X<15)
+pnorm(15,12,3)-pnorm(9,12,3)
+## 7) Calculer le quantile x d'ordre 0.1589
+qnorm(0.159,12,3)
+## 8) Calculer le quantile x d'ordre 0.8411
+qnorm(0.8411,12,3)
+## 9) Représenter la fonction de densité de la loi N(12;3)
+x = seq(from = 0, to = 20, by = 0.2)
+plot(x, dnorm(x, mean = 12, sd = 3), type = "l", col = 'red',
+     lwd = 2, main = "Densité de la loi N(12;3)")
+## 10) Hachurer  la zone délimitée par les droites d'équation x=10 et x=15
+x = seq(from = 0, to = 20, by = 0.01)
+y = dnorm(x, mean = 12, sd = 3)
+plot(x, y, type = "l", col = 'red', lwd = 2, main = "Densité de la loi N(12;3)")
+x = seq(from = 10, to = 15, by = 0.01)
+y = dnorm(x, mean = 12, sd = 3)
+polygon(c(10, x, 15), c(0, y, 0), col = "blue", border = NA)
+
+## 11) Calculer de la zone délimitée par les droites d'équation x=10 et x=15
+pnorm(15,12,3)-pnorm(10,12,3)
